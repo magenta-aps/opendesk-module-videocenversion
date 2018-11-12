@@ -1,16 +1,19 @@
 # opendesk-module-template
 This is the template for OpenDESK modules. The template should be used in the following way:
 
-## Build the OpenDESK core jar
+## Build the OpenDESK core AMP and jar
 
-In order to use this AMP you need to make sure that the OpenDESK core jar file 
-is located in your local `.m2` folder. Do the following:
+In order to build this module AMP you need to make sure that the OpenDESK core jar and AMP files 
+are located in your local `.m2` folder. Do the following in order to build the OpenDESK core AMP:
 
 ```
 $ git clone https://github.com/magenta-aps/OpenDESK.git
 $ cd OpenDESK/backend
 $ mvn clean install
 ```
+
+The OpenDESK jar file can be build by first changing the `<package>` tag in the POM file 
+to `jar` and then run `mvn clean install` again.
 
 ## Change the placeholder artifactId
 
