@@ -1,79 +1,47 @@
 package dk.opendesk.videoconversion.video;
 
-import com.tradeshift.test.remote.Remote;
-import com.tradeshift.test.remote.RemoteTestRunner;
-import org.alfresco.model.ContentModel;
-import org.alfresco.repo.nodelocator.CompanyHomeNodeLocator;
-import org.alfresco.repo.nodelocator.NodeLocatorService;
-import org.alfresco.service.cmr.repository.ChildAssociationRef;
-import org.alfresco.service.cmr.repository.NodeRef;
-import org.alfresco.service.cmr.repository.NodeService;
-import org.alfresco.service.namespace.NamespaceService;
-import org.alfresco.service.namespace.QName;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
+import static junit.framework.Assert.*;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static org.alfresco.service.namespace.QName.createQName;
-import static org.junit.Assert.assertTrue;
-
-
-
-@RunWith(RemoteTestRunner.class)
-@Remote(runnerClass=SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:alfresco/application-context.xml")
 public class VideoInputHandlerImplTest {
 
-    @Autowired
-    @Qualifier("NodeService")
-    private NodeService nodeService;
+    private VideoInputHandler videoInputHandler;
 
-    @Autowired
-    @Qualifier("nodeLocatorService")
-    private NodeLocatorService nodeLocatorService;
-
+    @Before
+    public void setUp() {
+        videoInputHandler = new VideoInputHandlerImpl();
+    }
 
     @Test
-    public void formatIsMOV() {
-        System.out.println(getCompanyHomeNodeRef());
+    public void formatIsMov() {
+        assertEquals("mov", videoInputHandler.getFormat("video.mov"));
+    }
 
-        NodeRef parentFolderNodeRef = getCompanyHomeNodeRef();
-        QName associationType = ContentModel.ASSOC_CONTAINS;
-        QName associationQName = createQName(NamespaceService.CONTENT_MODEL_1_0_URI, QName.createValidLocalName("video.mov"));
+    @Test
+    public void convertsVideoFormatToLowerCase() {
+        assertEquals("mov", videoInputHandler.getFormat("video.MOV"));
+    }
 
-        Map<QName, Serializable> properties = new HashMap<>();
-        properties.put(ContentModel.PROP_NAME, "video.mov");
-        ChildAssociationRef parentChildAssocRef = nodeService.createNode(
-                parentFolderNodeRef,
-                associationType,
-                associationQName,
-                ContentModel.TYPE_CONTENT,
-                properties
-        );
+    @Test
+    public void handlesFilenameWithSeveralDots() {
+        assertEquals("mov", videoInputHandler.getFormat("video.xyz.mov"));
+    }
 
-        NodeRef video = parentChildAssocRef.getChildRef();
+    @Test
+    public void returnNullWhenNoExtension() {
+        assertNull(videoInputHandler.getFormat("video"));
+    }
 
-        Map<QName, Serializable> video_properties = nodeService.getProperties(video);
+    @Test
+    public void returnNullWhenExtensionNotVideoExtension() {
+        assertNull(videoInputHandler.getFormat("video.xyz"));
+    }
 
-        assertEquals("video.mov", video_properties.get(ContentModel.PROP_NAME));
+    @Test
+    public void pathIs2000_01_01_12_00_12345678_1234_1234_1234_012345678912_bin() {
 
     }
 
-
-    private NodeRef getCompanyHomeNodeRef() {
-        return nodeLocatorService.getNode(CompanyHomeNodeLocator.NAME, null, null);
-    }
-//    @Test
-//    public void test() {
-//        assertTrue(true);
-//    }
 }

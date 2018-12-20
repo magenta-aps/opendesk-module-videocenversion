@@ -2,16 +2,16 @@ package dk.opendesk.videoconversion.behavior;
 
 import dk.opendesk.videoconversion.video.VideoFormat;
 import dk.opendesk.videoconversion.video.VideoInputHandler;
+import org.alfresco.model.ContentModel;
 import org.alfresco.repo.content.ContentServicePolicies;
 import org.alfresco.repo.policy.Behaviour;
 import org.alfresco.repo.policy.JavaBehaviour;
 import org.alfresco.repo.policy.PolicyComponent;
+import org.alfresco.service.cmr.repository.ContentData;
 import org.alfresco.service.cmr.repository.NodeRef;
 import org.alfresco.service.cmr.repository.NodeService;
 import org.alfresco.service.namespace.NamespaceService;
 import org.alfresco.service.namespace.QName;
-
-import java.util.Arrays;
 
 public class VideoConversionBehavior implements ContentServicePolicies.OnContentUpdatePolicy {
 
@@ -23,9 +23,11 @@ public class VideoConversionBehavior implements ContentServicePolicies.OnContent
 
     @Override
     public void onContentUpdate(NodeRef nodeRef, boolean newContent) {
-        String videoFormat = videoInputHandler.getFormat(nodeRef);
+        String filename = (String) nodeService.getProperty(nodeRef, ContentModel.PROP_NAME);
+        String videoFormat = videoInputHandler.getFormat(filename);
         if (videoFormat != null) {
-            String path = videoInputHandler.getPath(nodeRef);
+            ContentData contentData = (ContentData) nodeService.getProperty(nodeRef, ContentModel.PROP_CONTENT);
+            String path = videoInputHandler.getPath(contentData);
         }
 
     }
