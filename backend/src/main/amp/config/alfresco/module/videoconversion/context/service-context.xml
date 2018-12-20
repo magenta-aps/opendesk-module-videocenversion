@@ -17,5 +17,13 @@
     limitations under the License.
 -->
 <beans>
-
+    <bean id="dk.opendesk.videoconversion.video.VideoInputHandler"
+          class="dk.opendesk.videoconversion.video.VideoInputHandlerImpl" />
+    <bean id="dk.opendesk.videoconversion.behavior.VideoConversionBehavior"
+          class="dk.opendesk.videoconversion.behavior.VideoConversionBehavior"
+          init-method="init">
+        <property name="nodeService" ref="NodeService"/>
+        <property name="policyComponent" ref="policyComponent"/>
+        <property name="videoInputHandler" ref="dk.opendesk.videoconversion.video.VideoInputHandler"/>
+    </bean>
 </beans>

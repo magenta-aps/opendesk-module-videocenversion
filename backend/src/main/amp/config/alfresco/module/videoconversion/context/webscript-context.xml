@@ -17,4 +17,12 @@
 	limitations under the License.
 -->
 <beans>
+
+    <bean id="webscript.conversion.get"
+          class="dk.opendesk.videoconversion.webscripts.VideoConversion"
+          parent="webscript">
+        <!--property name="fileFolderService" ref="FileFolderService"/-->
+    </bean>
+
+
 </beans>

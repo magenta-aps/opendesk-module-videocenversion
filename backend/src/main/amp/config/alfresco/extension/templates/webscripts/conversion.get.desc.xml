@@ -1,0 +1,7 @@
+<webscript>
+    <shortname>OpenDesk video conversion</shortname>
+    <description>Query status for video conversion</description>
+    <url>/vc/status</url>
+    <format default="json">argument</format>
+    <authentication>user</authentication>
+</webscript>
